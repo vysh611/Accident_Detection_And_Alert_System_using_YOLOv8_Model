@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Carint</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css" />
+    <!-- Custom styles for this template -->
+    <link href="/static/css/style.css" rel="stylesheet" />
+    <style>
+        .container {
+            margin-top: 30px;
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        img, video {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 5px;
+            margin-top: 15px;
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .header_section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .navbar-brand img {
+            margin-right: 10px;
+        }
+
+        #prediction-form {
+            margin-top: 10px;
+        }
+
+        #prediction-results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero_area">
+        <!-- Header section starts -->
+        <header class="header_section">
+            <div class="header_top">
+                <div class="container-fluid">
+                    <div class="contact_nav">
+                        <!-- You can add contact info here if needed -->
+                    </div>
+                </div>
+            </div>
+            <div class="header_bottom">
+                <div class="container-fluid">
+                    <nav class="navbar navbar-expand-lg custom_nav-container">
+                        <a class="navbar-brand" href="#">
+                            <img src="/static/images/icons8-car-48.png" alt="Carint Logo">
+                            Accident Detection and alert system using Yolo Model
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class=""> </span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Predict
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ url_for('upload') }}">Prediction</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/logout">Logout</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <!-- Header section ends -->
+    </div>
+
+    <section class="inner_page">
+        <div class="container mt-5">
+            <form id="prediction-form" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+                <h1 class="text-center">Accident Detection</h1>
+    
+                <!-- Image/Video Upload -->
+                <div class="form-group">
+                    <label for="image_file">Upload Image or Video</label>
+                    <input type="file" id="image_file" name="image_file" class="form-control" accept="image/*,video/*" required onchange="checkSubmitButton()">
+                </div>
+    
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary" id="submit-button" style="display: none;">Submit</button>
+            </form>
+            <center>
+            <!-- Display Result -->
+            {% if detection_message %}
+                <h3 class="mt-4">{{ detection_message }}</h3>
+            {% endif %}
+            {% if result_image %}
+                <img src="{{ result_image }}" class="img-fluid" alt="Result Image">
+            {% elif result_video %}
+                <video controls>
+                    <source src="{{ result_video }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            {% endif %}
+        </center>
+        </div>
+    </section>
+
+    <script>
+        // Show the submit button only if the file input has a file
+        function checkSubmitButton() {
+            var imageFile = document.getElementById('image_file').files.length > 0;
+            var submitButton = document.getElementById('submit-button');
+            if (imageFile) {
+                submitButton.style.display = 'block';  // Show submit button
+            } else {
+                submitButton.style.display = 'none';  // Hide submit button
+            }
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            checkSubmitButton();  // Ensure the button visibility is updated based on the file input state
+        };
+    </script>
+
+</body>
+</html>
